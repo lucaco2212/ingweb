@@ -1,14 +1,14 @@
 <script setup>
-import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import DancingLetters from './components/DancingLetters.vue'
 import LiquidButton from './components/LiquidButton.vue'
 
-const tab = ref('inicio')
+const route = useRoute()
 </script>
 
 <template>
   <div class="app-layout">
-    <!-- Header en Tarjeta Taped Design con Título Grande y Efecto Dancing Letters -->
+    <!-- Header en Tarjeta Taped Design con Titulo Grande y Efecto Dancing Letters -->
     <header class="taped-header-card">
       <!-- Cinta decorativa superior izquierda -->
       <div class="tape-badge tape-tl">
@@ -26,9 +26,9 @@ const tab = ref('inicio')
       </div>
 
       <div class="header-inner">
-        <span class="badge-tech">⚡ TecnoSoporte Ñuble</span>
+        <span class="badge-tech">TecnoSoporte Ñuble</span>
 
-        <!-- Título interactivo con efecto Dancing Letters y tipografía grande -->
+        <!-- Titulo interactivo con efecto Dancing Letters y tipografia grande -->
         <div class="titulo-wrapper">
           <DancingLetters text="TecnoSoporte Ñuble" />
         </div>
@@ -37,53 +37,54 @@ const tab = ref('inicio')
           Soluciones tecnológicas integrales: soporte técnico, infraestructura de redes, desarrollo web y capacitación digital.
         </p>
 
-        <!-- Pestañas de navegación con Liquid Buttons -->
+        <!-- Navegacion por rutas con RouterLink y LiquidButton -->
         <nav class="nav-tabs-container">
-          <LiquidButton 
-            :variant="tab === 'inicio' ? 'default' : 'glass'" 
-            :active="tab === 'inicio'"
-            size="md"
-            @click="tab = 'inicio'"
-          >
-            🏠 Inicio
-          </LiquidButton>
+          <RouterLink to="/" class="nav-link">
+            <LiquidButton 
+              :variant="route.name === 'inicio' ? 'default' : 'glass'" 
+              :active="route.name === 'inicio'"
+              size="md"
+            >
+              Inicio
+            </LiquidButton>
+          </RouterLink>
 
-          <LiquidButton 
-            :variant="tab === 'nosotros' ? 'default' : 'glass'" 
-            :active="tab === 'nosotros'"
-            size="md"
-            @click="tab = 'nosotros'"
-          >
-            👥 Nosotros
-          </LiquidButton>
+          <RouterLink to="/nosotros" class="nav-link">
+            <LiquidButton 
+              :variant="route.name === 'nosotros' ? 'default' : 'glass'" 
+              :active="route.name === 'nosotros'"
+              size="md"
+            >
+              Nosotros
+            </LiquidButton>
+          </RouterLink>
 
-          <LiquidButton 
-            :variant="tab === 'servicios' ? 'default' : 'glass'" 
-            :active="tab === 'servicios'"
-            size="md"
-            @click="tab = 'servicios'"
-          >
-            🛠️ Servicios
-          </LiquidButton>
+          <RouterLink to="/servicios" class="nav-link">
+            <LiquidButton 
+              :variant="route.name === 'servicios' ? 'default' : 'glass'" 
+              :active="route.name === 'servicios'"
+              size="md"
+            >
+              Servicios
+            </LiquidButton>
+          </RouterLink>
 
-          <LiquidButton 
-            :variant="tab === 'contacto' ? 'default' : 'glass'" 
-            :active="tab === 'contacto'"
-            size="md"
-            @click="tab = 'contacto'"
-          >
-            📬 Contacto
-          </LiquidButton>
+          <RouterLink to="/contacto" class="nav-link">
+            <LiquidButton 
+              :variant="route.name === 'contacto' ? 'default' : 'glass'" 
+              :active="route.name === 'contacto'"
+              size="md"
+            >
+              Contacto
+            </LiquidButton>
+          </RouterLink>
         </nav>
       </div>
     </header>
 
-    <!-- Contenido de la sección seleccionada -->
+    <!-- Contenedor dinamico de vistas -->
     <main class="main-content">
-      <div class="placeholder-section">
-        <h3>Portal de Servicios Tecnológicos</h3>
-        <p>Estructura lista para integración de vistas y componentes de TecnoSoporte Ñuble.</p>
-      </div>
+      <RouterView />
     </main>
   </div>
 </template>
@@ -95,12 +96,12 @@ const tab = ref('inicio')
   padding: 40px 20px 60px 20px;
 }
 
-/* Tarjeta Taped para el Título / Header */
+/* Tarjeta Taped para el Titulo / Header */
 .taped-header-card {
   position: relative;
   background-color: var(--color-base-200);
   border-radius: 28px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-base-300);
   padding: 50px 32px 40px 32px;
   box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
   margin-bottom: 36px;
@@ -168,23 +169,15 @@ const tab = ref('inicio')
   padding: 8px;
   border-radius: 18px;
   gap: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-base-300);
+}
+
+.nav-link {
+  text-decoration: none;
+  display: inline-block;
 }
 
 .main-content {
   width: 100%;
-}
-
-.placeholder-section {
-  background: var(--color-base-200);
-  border: 1px dashed var(--color-base-300);
-  border-radius: 20px;
-  padding: 40px 24px;
-  text-align: center;
-  color: var(--color-muted);
-}
-.placeholder-section h3 {
-  color: var(--color-neutral);
-  margin-bottom: 8px;
 }
 </style>
