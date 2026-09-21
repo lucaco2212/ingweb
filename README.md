@@ -4,13 +4,13 @@
 **Asignatura:** Ingenieria Web  
 **Tecnologia:** Vue 3 (Composition API / script setup) + Vite + Vue Router  
 
----
+
 
 ## Contexto del Proyecto
 
 Transformacion y evolucion de la plataforma web hacia el portal corporativo y catalogo interactivo de **TecnoSoporte Nuble**, empresa dedicada a servicios de soporte tecnico, infraestructura de redes, desarrollo web y capacitacion tecnologica en la Region de Nuble.
 
----
+
 
 ## Parte 1 – Reutilizacion del proyecto
 
@@ -44,7 +44,9 @@ En esta primera etapa se realizo un analisis integral del codigo base heredado (
 - **src/data/**: Para almacenar el catalogo de servicios y datos locales sin backend.
 - **src/router/**: Para la configuracion de rutas con Vue Router.
 
----
+
+
+
 
 ## Parte 2 – Navegacion y vistas
 

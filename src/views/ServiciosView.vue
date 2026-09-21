@@ -1,19 +1,24 @@
 <script setup>
+import { servicios } from '../data/servicios.js'
+import ServicioCard from '../components/ServicioCard.vue'
 </script>
 
 <template>
   <div class="view-container">
-    <div class="header-card">
+    <header class="section-header-card">
       <div class="section-tag">Catálogo Profesional</div>
       <h2 class="section-title">Nuestros Servicios Tecnológicos</h2>
       <p class="section-lead">
-        Ofrecemos soluciones integrales adaptadas a las necesidades específicas de cada cliente.
+        Ponemos a su disposición un portafolio integral de soluciones especializadas para particulares, profesionales y empresas en la Región de Ñuble.
       </p>
-    </div>
+    </header>
 
-    <div class="provisional-card">
-      <h3>Módulo de Servicios en Configuración</h3>
-      <p>El catálogo completo e interactivo de servicios tecnológicos estará disponible en la siguiente etapa del sistema.</p>
+    <div class="servicios-grid">
+      <ServicioCard 
+        v-for="servicio in servicios" 
+        :key="servicio.id" 
+        :servicio="servicio" 
+      />
     </div>
   </div>
 </template>
@@ -22,10 +27,10 @@
 .view-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
-.header-card {
+.section-header-card {
   background: var(--color-base-200);
   border-radius: 24px;
   border: 1px solid var(--color-base-300);
@@ -56,26 +61,20 @@
 .section-lead {
   font-size: 1.05rem;
   color: var(--color-muted);
-  max-width: 650px;
+  max-width: 680px;
   margin: 0 auto;
+  line-height: 1.65;
 }
 
-.provisional-card {
-  background: var(--color-base-200);
-  border: 1px dashed var(--color-base-300);
-  border-radius: 20px;
-  padding: 48px 24px;
-  text-align: center;
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
 }
 
-.provisional-card h3 {
-  font-size: 1.25rem;
-  color: var(--color-neutral);
-  margin-bottom: 10px;
-}
-
-.provisional-card p {
-  color: var(--color-muted);
-  font-size: 0.98rem;
+@media (max-width: 640px) {
+  .servicios-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
