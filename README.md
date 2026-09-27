@@ -354,13 +354,64 @@ app.use(express.json())
 3. **Inocuidad sobre Peticiones Existentes:**  
    Al tratarse de un middleware condicional que solo actua cuando existe un payload JSON en la solicitud, las rutas de lectura existentes (`GET /`, `GET /api/servicios`, `GET /api/servicios/:id`) continuan operando con total normalidad y sin degradacion de rendimiento.
 
+### Parte 12 – Pruebas finales
+
+Se realizo una bateria de pruebas funcionales automatizadas y manuales sobre el servidor backend en ejecucion (`http://localhost:3000`), validando el comportamiento de cada endpoint, el manejo de parametros de consulta, el control de errores HTTP y la estabilidad del proceso:
+
+| ID Prueba | Caso de Prueba | Endpoint / Solicitud | Codigo HTTP Esperado | Codigo HTTP Obtenido | Resultado Observado | Estado |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **P-01** | Inicializacion y ruta raiz | `GET /` | `200 OK` | `200 OK` | Responde con el texto `"Servidor de empresa funcionando correctamente"`. | Exitosa |
+| **P-02** | Obtencion del catalogo completo | `GET /api/servicios` | `200 OK` | `200 OK` | Retorna un arreglo JSON con los 8 servicios registrados en la coleccion. | Exitosa |
+| **P-03** | Busqueda de servicio por ID existente | `GET /api/servicios/2` | `200 OK` | `200 OK` | Retorna el objeto del servicio *Instalacion y Configuracion de Redes y Wi-Fi*. | Exitosa |
+| **P-04** | Busqueda de servicio por ID inexistente | `GET /api/servicios/999` | `404 Not Found` | `404 Not Found` | Retorna payload de error `{ "mensaje": "Servicio no encontrado" }`. | Exitosa |
+| **P-05** | Filtro por categoria existente | `GET /api/servicios?categoria=desarrollo web` | `200 OK` | `200 OK` | Retorna arreglo con 2 servicios de la categoria *Desarrollo Web*. | Exitosa |
+| **P-06** | Filtro por categoria inexistente | `GET /api/servicios?categoria=inexistente` | `200 OK` | `200 OK` | Retorna un arreglo vacio `[]` sin provocar caidas ni excepciones en consola. | Exitosa |
+
+---
+
+## Instrucciones para Ejecutar el Backend
+
+Para levantar y probar de manera aislada el servidor backend desarrollado en la Actividad 9:
+
+1. **Navegar al directorio del backend:**
+   ```bash
+   cd backend
+   ```
+
+2. **Instalar dependencias:**
+   ```bash
+   npm install
+   ```
+
+3. **Iniciar el servidor Express:**
+   ```bash
+   npm start
+   ```
+   *(o alternativamente: `node server.js`)*
+
+4. **Verificar en el navegador o cliente REST:**
+   - Servidor raiz: `http://localhost:3000/`
+   - Catalogo completo: `http://localhost:3000/api/servicios`
+   - Servicio individual: `http://localhost:3000/api/servicios/1`
+   - Filtro por categoria: `http://localhost:3000/api/servicios?categoria=Soporte%20Técnico`
+
+---
+
+## Reflexion Final sobre lo Aprendido
+
+El desarrollo de la Actividad 9 permitio consolidar los fundamentos de la arquitectura cliente-servidor y el diseno de APIs RESTful utilizando Node.js y el framework Express:
+
+1. **Desacoplamiento Arquitectonico:** La separacion estricta entre frontend (SPA en Vue 3) y backend (servidor Express) proporciona independencia en el ciclo de vida, despliegue y escalabilidad de cada capa de software.
+2. **Enrutamiento y Parametrizacion REST:** Se comprendio la distincion practica entre parametros de ruta (`req.params`) para la identificacion univoca de recursos jerarquicos y parametros de consulta (`req.query`) para el filtrado flexible y transformacion de colecciones.
+3. **Manejo Riguroso de Codigos HTTP y Tipos:** La importancia del tipado explicito (conversion con `Number()`) y el envio de codigos de estado semanticos estandarizados (`200 OK`, `404 Not Found`) para garantizar previsibilidad en el consumo de la API.
+4. **Middleware y Preparacion de Payloads:** La configuracion temprana de `express.json()` sienta las bases para el procesamiento seguro y estructurado de datos en operaciones futuras de mutacion (`POST`, `PUT`, `PATCH`).
+
 ---
 
 ## Verificacion de Integridad
-- Frontend: Compilacion validada con `npm run build` (0 errores, 0 advertencias).
-- Backend: Middleware `express.json()` integrado e inicializado globalmente.
-- Backend: Endpoint `GET /api/servicios` verificado respondiendo con la coleccion completa o filtrada por `categoria` (query string).
-- Backend: Endpoint `GET /api/servicios/:id` verificado con busqueda exitosa (200 OK) y manejo de id inexistente (404 Not Found).
+- **Frontend (Actividad 8):** Intacto y sin modificaciones. Validado con compilacion limpia (`npm run build`).
+- **Backend (Actividad 9):** Servidor Express estructurado, con middleware JSON, modularizacion CommonJS, rutas de consulta, filtrado insensible a mayusculas/minusculas y 100% de pruebas funcionales aprobadas.
+
 
 
 
