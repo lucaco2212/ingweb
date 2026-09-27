@@ -33,7 +33,9 @@ El proyecto integra un catalogo dinamico de servicios con filtrado reactivo mult
    ```bash
    cd backend
    npm install
+   npm start
    ```
+   El servidor backend estara disponible en `http://localhost:3000`.
 
 3. **Compilacion para produccion del frontend:**
    ```bash
@@ -49,7 +51,8 @@ actividad semana 9/
 ├── backend/                    # Servidor backend independiente (Actividad 9)
 │   ├── node_modules/           # Dependencias exclusivas del backend
 │   ├── package-lock.json       # Arbol de dependencias bloqueado del backend
-│   └── package.json            # Manifiesto y scripts del backend (Express)
+│   ├── package.json            # Manifiesto y scripts del backend (Express)
+│   └── server.js               # Punto de entrada y configuracion del servidor Express
 ├── public/
 ├── src/                        # Codigo fuente del frontend intacto (Actividad 8)
 │   ├── assets/                 # Recursos graficos estaticos
@@ -125,37 +128,59 @@ Consolidacion y control de calidad:
 
 ## Actividad 9 – Backend con Node.js y Express
 
-## Parte 1 y 2 – Preparacion del backend
+### Parte 1 y 2 – Preparacion del backend
 
 En esta etapa se establecio la base y arquitectura inicial para el servidor backend, disenado de manera completamente desacoplada e independiente del frontend desarrollado en la Actividad 8:
+- **Creacion del Directorio de Backend:** Se creo la carpeta `backend/` en la raiz del repositorio, manteniendo una separacion limpia respecto a los archivos del frontend.
+- **Inicializacion del Proyecto Node.js:** Se ejecuto `npm init -y` dentro de `backend/`, generando su propio manifiesto `backend/package.json`.
+- **Instalacion de Express:** Se instalo el framework web Express (`npm install express`), registrandose en el bloque `dependencies` de `backend/package.json`.
+- **Configuracion de .gitignore:** Se anadio la regla `backend/node_modules` para evitar el versionado de dependencias instaladas.
+- **Independencia Arquitectonica:** El backend opera de forma aislada y no altera ningun archivo ni funcionalidad del frontend de la Actividad 8.
 
-### 1. Creacion del Directorio de Backend
-- Se creo la carpeta `backend/` en la raiz del repositorio, manteniendo una separacion limpia respecto a los archivos y carpetas del frontend (`src/`, `index.html`, `public/`, `package.json` raiz).
+---
 
-### 2. Inicializacion del Proyecto Node.js
-- Se ejecuto el comando:
-  ```bash
-  npm init -y
-  ```
-  con el directorio de trabajo ubicado dentro de `backend/`.
-- Este comando genero de forma automatica el archivo `backend/package.json`, estableciendo el manifiesto de configuracion propio del backend con sus metadatos (nombre, version, punto de entrada `index.js`, scripts y tipo de modulo).
+### Parte 3 y 4 – Primer servidor
 
-### 3. Instalacion de Express
-- Se instalo el framework web **Express** dentro de la carpeta `backend/` mediante el comando:
-  ```bash
-  npm install express
-  ```
-- **Proposito de Express:** Express es un framework minimalista y flexible para Node.js que proporciona una infraestructura robusta para la creacion de servidores HTTP, manejo de rutas, procesamiento de solicitudes (requests), envio de respuestas (responses), soporte de middleware y construccion de APIs REST.
-- Se verifico en `backend/package.json` la correcta incorporacion de `"express"` dentro del bloque de dependencias (`dependencies`).
+En esta etapa se desarrollo y ejecuto el primer servidor web funcional en Node.js utilizando el framework Express a traves del archivo `backend/server.js`:
 
-### 4. Configuracion de Control de Versiones (.gitignore)
-- Se actualizo el archivo `.gitignore` de la raiz del proyecto para excluir explicitamente `backend/node_modules`, evitando que las dependencias binarias y paquetes descargados sean versionados en el repositorio Git.
+```javascript
+const express = require('express')
 
-### 5. Independencia Arquitectonica
-- Se enfatiza que el backend opera de forma aislada y no altera ningun archivo ni funcionalidad del frontend de la Actividad 8, el cual permanece 100% intacto y funcional.
+const app = express()
+const PORT = 3000
+
+app.get('/', (req, res) => {
+  res.send('Servidor de empresa funcionando correctamente')
+})
+
+app.listen(PORT, () => {
+  console.log(`Servidor ejecutandose en http://localhost:${PORT}`)
+})
+```
+
+#### Explicacion de Conceptos Fundamentales:
+
+1. **Que hace `app.get()`:**  
+   Es un metodo de enrutamiento proporcionado por Express que asocia una funcion controladora (callback) a una ruta especifica (en este caso, la ruta raiz `'/'`) cuando se recibe una solicitud HTTP mediante el metodo **GET**. Permite definir que logica de negocio o contenido se debe procesar y entregar al cliente cuando accede a dicha URL.
+
+2. **Que representan `req` y `res`:**  
+   - **`req` (Request / Solicitud):** Es un objeto que encapsula toda la informacion enviada por el cliente hacia el servidor, incluyendo parametros de ruta (`req.params`), parametros de consulta en la URL (`req.query`), encabezados HTTP (`req.headers`), cuerpo de la peticion (`req.body`), cookies y metadatos de conexion.
+   - **`res` (Response / Respuesta):** Es un objeto provisto por Express que contiene metodos para construir y despachar la respuesta HTTP hacia el cliente. Permite enviar texto o HTML (`res.send()`), documentos JSON (`res.json()`), establecer codigos de estado HTTP (`res.status()`) y adjuntar cabeceras de respuesta.
+
+3. **Que hace `app.listen()`:**  
+   Es el metodo que inicia efectivamente el servidor HTTP en el sistema operativo, enlazando la aplicacion a un puerto de red especifico (en este caso, el puerto `3000`). Permite que el servidor quede en un estado de escucha activa y continua para recibir y atender las conexiones entrantes de clientes o navegadores web.
+
+#### Script de Ejecucion:
+En `backend/package.json` se configuro el comando de inicio en la seccion de scripts:
+```json
+"scripts": {
+  "start": "node server.js"
+}
+```
+Se verifico la ejecucion del servidor mediante `npm start` y la recepcion correcta del mensaje *"Servidor de empresa funcionando correctamente"* en `http://localhost:3000`.
 
 ---
 
 ## Verificacion de Integridad
 - Frontend: Compilacion validada con `npm run build` (0 errores, 0 advertencias).
-- Backend: Directorio `backend/` inicializado con su propio `package.json` y `express` instalado como dependencia.
+- Backend: Servidor `backend/server.js` configurado y probado en `http://localhost:3000` con `npm start`.
