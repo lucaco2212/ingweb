@@ -117,6 +117,39 @@ En esta cuarta etapa se integraron capacidades avanzadas de busqueda reactiva, f
 
 ---
 
+## Parte 5 – Formulario de contacto
+
+En esta quinta etapa se construyo el modulo interactivo de contacto y cotizaciones en `src/views/ContactoView.vue`, aplicando captura de datos bidireccional reactiva, validaciones integrales del lado del cliente y retroalimentacion visual sin persistencia en base de datos externa.
+
+### 1. Estructura del Formulario y Enlace de Datos
+El formulario utiliza un objeto reactivo `form` gestionado mediante `reactive()` con los siguientes campos:
+- **`nombre` (String):** Nombre completo del solicitante.
+- **`correo` (String):** Direccion de correo electronico corporativo o personal.
+- **`telefono` (String):** Numero de contacto telefonico o WhatsApp.
+- **`servicioId` (Number | String):** Identificador del servicio de interes seleccionado desde el menu desplegable.
+- **`mensaje` (String):** Detalle de la consulta o requerimiento tecnico.
+
+### 2. Integracion con el Estado Compartido y Preseleccion
+- Al montarse el componente (`onMounted`), se consulta el estado reactivo `servicioSeleccionado` provisto por `src/stores/seleccion.js`.
+- Si el usuario selecciono un servicio previamente desde la vista de Catalogo, el campo `<select>` se inicializa de forma automatica con dicho servicio y se despliega un aviso contextual (*"Servicio Preseleccionado: Ha seleccionado [Nombre] desde el catalogo de servicios"*).
+- Si no existe seleccion previa, el menu desplegable inicia en la opcion por defecto *"Seleccione un servicio"*.
+
+### 3. Reglas de Validacion y Retroalimentacion en Tiempo Real
+La validacion se ejecuta tanto en el evento `@blur` de cada campo como de forma global en el envio del formulario (`@submit.prevent="enviarFormulario"`), gestionando un objeto reactivo `errores`:
+- **Nombre:** Obligatorio y con longitud minima de 3 caracteres.
+- **Correo Electronico:** Obligatorio y validado mediante expresion regular de estructura de email (`/^[^\s@]+@[^\s@]+\.[^\s@]+$/`).
+- **Telefono:** Obligatorio y validado bajo formatos chilenos comunes (9 digitos numericos o prefijo internacional `+56 9`).
+- **Servicio:** Obligatorio, exigiendo la seleccion de una opcion valida del catalogo.
+- **Mensaje:** Obligatorio y con longitud minima de 10 caracteres explicativos.
+
+Cada campo en estado invalido recibe la clase CSS `.is-invalid` (resaltado con borde rojo de alerta) y renderiza condicionalmente un mensaje de error especifico mediante `v-if`.
+
+### 4. Confirmacion de Solicitud y Resumen
+- Al superar satisfactoriamente todas las validaciones, se oculta el formulario y se despliega una tarjeta de confirmacion con el resumen completo de la solicitud (nombre, correo, telefono, servicio, categoria, valor referencial, fecha y mensaje).
+- Se incorpora el boton *"Enviar otra consulta"*, el cual restablece todos los campos del formulario, limpia los errores y resetea la seleccion global mediante `limpiarSeleccion()`.
+
+---
+
 ## Verificacion de Integridad
 - Compilacion de produccion validada exitosamente con `npm run build` (0 errores, 0 advertencias).
-- Filtrado reactivo, emision de eventos y persistencia en store compartido verificados.
+- Flujo completo verificado: navegacion SPA, seleccion de servicio en catalogo, traspaso automatico al formulario de contacto, validacion de campos y confirmacion de envio.
