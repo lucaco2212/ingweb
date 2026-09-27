@@ -4,13 +4,13 @@
 **Asignatura:** Ingenieria Web  
 **Tecnologia:** Vue 3 (Composition API / script setup) + Vite + Vue Router  
 
-
+---
 
 ## Contexto del Proyecto
 
 Transformacion y evolucion de la plataforma web hacia el portal corporativo y catalogo interactivo de **TecnoSoporte Nuble**, empresa dedicada a servicios de soporte tecnico, infraestructura de redes, desarrollo web y capacitacion tecnologica en la Region de Nuble.
 
-
+---
 
 ## Parte 1 – Reutilizacion del proyecto
 
@@ -44,9 +44,7 @@ En esta primera etapa se realizo un analisis integral del codigo base heredado (
 - **src/data/**: Para almacenar el catalogo de servicios y datos locales sin backend.
 - **src/router/**: Para la configuracion de rutas con Vue Router.
 
-
-
-
+---
 
 ## Parte 2 – Navegacion y vistas
 
@@ -74,6 +72,51 @@ En el punto de entrada de la aplicacion (`src/main.js`), se registro el enrutado
 
 ---
 
+## Parte 3 – Catalogo de servicios y componentes
+
+En esta etapa se implemento la capa de datos local y el componente modular para la representacion del catalogo de servicios tecnologicos.
+
+### 1. Estructuracion de los Datos (src/data/servicios.js)
+Se creo un modulo de datos que exporta una coleccion de 7 servicios tecnologicos representativos del giro comercial de la empresa, distribuidos en 4 categorias principales (*Soporte Tecnico*, *Redes e Infraestructura*, *Desarrollo Web*, *Capacitacion*).
+
+Cada objeto de servicio cumple con la siguiente estructura de propiedades:
+- **`id` (Number):** Identificador unico numerico del servicio.
+- **`nombre` (String):** Titulo descriptivo y formal del servicio.
+- **`categoria` (String):** Clasificacion tematica del servicio.
+- **`descripcion` (String):** Sintesis del alcance y actividades tecnicas incluidas.
+- **`precio` (Number):** Tarifa referencial en formato numerico entero para su posterior formateo.
+- **`disponible` (Boolean):** Estado operativo del servicio (al menos un servicio configurado con `false` para representar servicios en mantenimiento o con cupos agotados).
+
+### 2. Componente Reutilizable (src/components/ServicioCard.vue)
+Se desarrollo el componente reutilizable `ServicioCard.vue`, el cual encapsula la presentacion individual de cada servicio:
+- **Recepcion de Props:** Define la prop `servicio` como un objeto requerido con funcion validadora personalizada para verificar la existencia y tipos de las 5 propiedades obligatorias (`id`, `nombre`, `categoria`, `descripcion`, `precio`, `disponible`).
+- **Formateo de Moneda Local:** Utiliza una propiedad computada (`precioFormateado`) mediante el API estandar `Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 })`, asegurando la representacion visual adecuada en pesos chilenos (por ejemplo, `$25.000`).
+- **Etiquetas de Estado y Categoria:** Incorpora badges visuales con clases dinamicas condicionales para destacar la categoria tematica y el estado de disponibilidad.
+
+---
+
+## Parte 4 – Filtros, condicionales e interaccion
+
+En esta cuarta etapa se integraron capacidades avanzadas de busqueda reactiva, filtrado multidimensional sin mutacion de datos, gestion condicional de la interfaz y comunicacion entre componentes mediante eventos personalizados (`emit`) y estado reactivo compartido.
+
+### 1. Sistema de Filtros Reactivos en ServiciosView.vue
+- **Filtro de Busqueda Textual:** Vinculado bidireccionalmente con `v-model="busqueda"` a un campo de entrada de texto, permitiendo coincidencias insensibles a mayusculas/minusculas sobre el nombre del servicio.
+- **Filtro por Categoria:** Vinculado con `v-model="categoriaSeleccionada"` a un elemento `<select>`. La lista de opciones se genera dinamicamente mediante una propiedad computada (`categorias = computed(() => ['Todas', ...new Set(servicios.map(s => s.categoria))])`), garantizando que cualquier nueva categoria en los datos se refleje automaticamente.
+- **Propiedad Computada `serviciosFiltrados`:** Aplica el metodo inmutable `.filter()` combinando de forma simultanea los criterios de texto y categoria. La coleccion original `servicios` nunca es mutada, preservando la integridad de los datos.
+- **Contador Dinamico de Resultados:** Informa en tiempo real la cantidad de registros coincidentes frente al total disponible (por ejemplo, *"Mostrando X de Y servicios"*).
+
+### 2. Manejo de Directivas Condicionales (v-if / v-else)
+- **Visualizacion de Resultados:** Se emplea `v-if="serviciosFiltrados.length > 0"` para renderizar la grilla de tarjetas. Cuando no existen coincidencias, la clausula `v-else` despliega un bloque de estado vacio descriptivo (*"No encontramos servicios con ese criterio"*) con un boton de accion rapida para restablecer los filtros a su estado inicial.
+- **Control de Disponibilidad en ServicioCard.vue:** Se utilizan bloques `v-if="servicio.disponible"` y `v-else` tanto para renderizar el distintivo visual (*Disponible* / *No disponible*) como para alternar entre el boton activo *"Solicitar informacion"* y el boton inactivo deshabilitado *"No disponible"*.
+
+### 3. Comunicacion entre Componentes mediante Emits y Estado Compartido
+- **Emision de Eventos (Hijo a Padre):** En `ServicioCard.vue` se declaro `defineEmits(['seleccionar'])`. Al presionar *"Solicitar informacion"*, se valida la disponibilidad y se dispara `emit('seleccionar', props.servicio)`.
+- **Captura en el Padre:** `ServiciosView.vue` escucha el evento mediante `@seleccionar="manejarSeleccion"`, invocando la actualizacion del estado global.
+- **Estado Reactivo Compartido (src/stores/seleccion.js):** Se implemento un modulo reactivo nativo de Vue (`ref`) que expone `servicioSeleccionado`, `seleccionarServicio()` y `limpiarSeleccion()`, permitiendo persistir el servicio escogido en memoria para su utilizacion directa en la vista de Contacto sin requerir dependencias externas como Pinia.
+- **Banner de Seleccion Activa:** Al seleccionarse un servicio, se despliega en la parte superior un panel con los datos del servicio, una opcion para cancelar la seleccion y un acceso directo (*"Ir a contacto"*) mediante navegacion programatica (`router.push('/contacto')`).
+
+---
+
 ## Verificacion de Integridad
 - Compilacion de produccion validada exitosamente con `npm run build` (0 errores, 0 advertencias).
-- Navegacion SPA fluida y reactiva entre todas las rutas del sistema.
+- Filtrado reactivo, emision de eventos y persistencia en store compartido verificados.

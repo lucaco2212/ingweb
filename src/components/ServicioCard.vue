@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import LiquidButton from './LiquidButton.vue'
 
 const props = defineProps({
   servicio: {
@@ -18,6 +19,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['seleccionar'])
+
 const precioFormateado = computed(() => {
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -25,6 +28,12 @@ const precioFormateado = computed(() => {
     maximumFractionDigits: 0
   }).format(props.servicio.precio)
 })
+
+function solicitarInfo() {
+  if (props.servicio.disponible) {
+    emit('seleccionar', props.servicio)
+  }
+}
 </script>
 
 <template>
@@ -35,10 +44,16 @@ const precioFormateado = computed(() => {
     <div class="card-header">
       <span class="category-badge">{{ servicio.categoria }}</span>
       <span 
-        class="status-badge"
-        :class="servicio.disponible ? 'status-available' : 'status-unavailable'"
+        v-if="servicio.disponible" 
+        class="status-badge status-available"
       >
-        {{ servicio.disponible ? 'Disponible' : 'No disponible' }}
+        Disponible
+      </span>
+      <span 
+        v-else 
+        class="status-badge status-unavailable"
+      >
+        No disponible
       </span>
     </div>
 
@@ -51,6 +66,26 @@ const precioFormateado = computed(() => {
       <div class="price-container">
         <span class="price-label">Valor referencial</span>
         <span class="price-value">{{ precioFormateado }}</span>
+      </div>
+
+      <div class="action-container">
+        <LiquidButton 
+          v-if="servicio.disponible"
+          variant="primary"
+          size="sm"
+          @click="solicitarInfo"
+        >
+          Solicitar información
+        </LiquidButton>
+
+        <LiquidButton 
+          v-else
+          variant="glass"
+          size="sm"
+          :disabled="true"
+        >
+          No disponible
+        </LiquidButton>
       </div>
     </div>
   </article>
@@ -78,7 +113,7 @@ const precioFormateado = computed(() => {
 
 .servicio-card.is-unavailable {
   opacity: 0.85;
-  background: #fbfcfe;
+  background: #f8fafc;
 }
 
 .card-header {
@@ -144,6 +179,8 @@ const precioFormateado = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .price-container {
@@ -160,9 +197,14 @@ const precioFormateado = computed(() => {
 }
 
 .price-value {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 800;
   font-family: var(--font-display);
   color: var(--color-primary);
+}
+
+.action-container {
+  display: flex;
+  align-items: center;
 }
 </style>
