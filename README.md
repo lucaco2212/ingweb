@@ -258,6 +258,44 @@ Se comprobo el funcionamiento del servidor realizando peticiones HTTP a `http://
 
 ---
 
+### Parte 7 – Consulta por ID
+
+En esta etapa se implemento la ruta parametrizada `GET /api/servicios/:id` en `backend/server.js`, permitiendo la busqueda y recuperacion individual de un servicio especifico mediante su identificador numerico unico:
+
+```javascript
+app.get('/api/servicios/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const servicio = servicios.find(s => s.id === id)
+
+  if (!servicio) {
+    return res.status(404).json({ mensaje: 'Servicio no encontrado' })
+  }
+
+  res.json(servicio)
+})
+```
+
+#### Explicacion de Conceptos Tecnicos:
+
+1. **Que es `req.params`:**  
+   Es un objeto propio de Express que almacena y mapea todos los parametros de ruta (variables de segmento de URL) definidos con dos puntos (`:nombreParametro`) en el patron del endpoint. Cuando un cliente solicita `/api/servicios/3`, Express extrae el valor del segmento correspondiente y lo expone como una propiedad del objeto: `req.params.id === "3"`.
+
+2. **Por que se utiliza `Number()`:**  
+   Todos los valores extraidos de la URL a traves de `req.params` son recibidos de forma nativa como cadenas de texto (`String`). Dado que en la coleccion de datos (`backend/data/servicios.js`) la propiedad `id` esta almacenada como un dato numerico (`Number`), se aplica la conversion explicita con `Number(req.params.id)` para permitir una comparacion de igualdad estricta (`===`) en la funcion `find()`, evitando errores de comparacion por incompatibilidad de tipos primitivos.
+
+3. **Que representa el codigo de estado HTTP `404` (Not Found):**  
+   Es el codigo de estado estandar del protocolo HTTP que indica que el servidor ha comprendido la solicitud del cliente, pero no ha podido encontrar el recurso solicitado en su origen de datos o base de almacenamiento. En una arquitectura REST, retornar `404` junto con un payload descriptivo (`{ mensaje: 'Servicio no encontrado' }`) es la practica idonea para senalar que el recurso con el identificador solicitado no existe en el sistema.
+
+#### Verificacion de Endpoints por ID:
+Se realizaron pruebas de consulta HTTP contra el servidor en ejecucion:
+- **`GET /api/servicios/1`:** Retorno codigo `200 OK` con el objeto completo del servicio *Mantenimiento Preventivo y Correctivo de Equipos*.
+- **`GET /api/servicios/3`:** Retorno codigo `200 OK` con el objeto completo del servicio *Desarrollo de Sitios Web y Landing Pages*.
+- **`GET /api/servicios/999`:** Retorno codigo `404 Not Found` con la respuesta JSON `{ "mensaje": "Servicio no encontrado" }`.
+
+---
+
 ## Verificacion de Integridad
 - Frontend: Compilacion validada con `npm run build` (0 errores, 0 advertencias).
 - Backend: Endpoint `GET /api/servicios` verificado y respondiendo con 8 registros en formato JSON.
+- Backend: Endpoint `GET /api/servicios/:id` verificado con busqueda exitosa (200 OK) y manejo de id inexistente (404 Not Found).
+
