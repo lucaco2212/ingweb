@@ -38,7 +38,7 @@ const route = useRoute()
         </p>
 
         <!-- Navegacion por rutas con RouterLink y LiquidButton -->
-        <nav class="nav-tabs-container">
+        <nav class="nav-tabs-container" aria-label="Navegación principal">
           <RouterLink to="/" class="nav-link">
             <LiquidButton 
               :variant="route.name === 'inicio' ? 'default' : 'glass'" 
@@ -86,14 +86,50 @@ const route = useRoute()
     <main class="main-content">
       <RouterView />
     </main>
+
+    <!-- Footer Corporativo Común -->
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <h4 class="footer-title">TecnoSoporte Ñuble</h4>
+          <p class="footer-desc">
+            Servicios tecnológicos integrales, soporte computacional y soluciones digitales de alto estándar para la Región de Ñuble y alrededores.
+          </p>
+        </div>
+
+        <div class="footer-info">
+          <div class="info-block">
+            <span class="info-label">Ubicación:</span>
+            <span class="info-value">Chillán, Región de Ñuble, Chile</span>
+          </div>
+
+          <div class="info-block">
+            <span class="info-label">Contacto:</span>
+            <span class="info-value">contacto@tecnosoportenuble.cl | +56 9 9123 4567</span>
+          </div>
+
+          <div class="info-block">
+            <span class="info-label">Horario de Atención:</span>
+            <span class="info-value">Lunes a Viernes 09:00 - 18:30 hrs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 TecnoSoporte Ñuble. Todos los derechos reservados. Portal desarrollado en Vue 3 + Vite.</p>
+      </div>
+    </footer>
   </div>
 </template>
 
 <style scoped>
 .app-layout {
-  max-width: 1050px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 40px 20px 60px 20px;
+  padding: 40px 20px 40px 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Tarjeta Taped para el Titulo / Header */
@@ -102,8 +138,8 @@ const route = useRoute()
   background-color: var(--color-base-200);
   border-radius: 28px;
   border: 1px solid var(--color-base-300);
-  padding: 50px 32px 40px 32px;
-  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+  padding: 48px 32px 38px 32px;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.05);
   margin-bottom: 36px;
   text-align: center;
 }
@@ -145,19 +181,19 @@ const route = useRoute()
   letter-spacing: 1px;
   padding: 5px 16px;
   border-radius: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .titulo-wrapper {
-  margin: 10px 0 16px 0;
+  margin: 8px 0 14px 0;
   width: 100%;
 }
 
 .subtitle {
   color: var(--color-muted);
-  font-size: 1.1rem;
-  max-width: 650px;
-  margin: 0 auto 28px auto;
+  font-size: 1.05rem;
+  max-width: 660px;
+  margin: 0 auto 26px auto;
   line-height: 1.6;
 }
 
@@ -167,9 +203,10 @@ const route = useRoute()
   justify-content: center;
   background-color: var(--color-base-100);
   padding: 8px;
-  border-radius: 18px;
+  border-radius: 20px;
   gap: 10px;
   border: 1px solid var(--color-base-300);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .nav-link {
@@ -179,5 +216,124 @@ const route = useRoute()
 
 .main-content {
   width: 100%;
+  flex-grow: 1;
+  margin-bottom: 48px;
+}
+
+/* Footer */
+.app-footer {
+  background: var(--color-base-200);
+  border: 1px solid var(--color-base-300);
+  border-radius: 24px;
+  padding: 36px 32px 24px 32px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+  margin-top: auto;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-base-300);
+}
+
+.footer-brand {
+  flex: 1;
+  min-width: 260px;
+}
+
+.footer-title {
+  font-size: 1.25rem;
+  color: var(--color-neutral);
+  margin-bottom: 8px;
+}
+
+.footer-desc {
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  max-width: 420px;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 260px;
+}
+
+.info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.info-value {
+  font-size: 0.92rem;
+  color: var(--color-neutral);
+}
+
+.footer-bottom {
+  padding-top: 18px;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .app-layout {
+    padding: 24px 14px 30px 14px;
+  }
+  .taped-header-card {
+    padding: 36px 18px 28px 18px;
+    border-radius: 22px;
+    margin-bottom: 24px;
+  }
+  .tape-badge {
+    transform: scale(0.6);
+  }
+  .tape-tl {
+    top: -12px;
+    left: -12px;
+  }
+  .tape-tr {
+    top: -12px;
+    right: -12px;
+  }
+  .subtitle {
+    font-size: 0.96rem;
+    margin-bottom: 20px;
+  }
+  .footer-inner {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-tabs-container {
+    width: 100%;
+    gap: 6px;
+    padding: 6px;
+  }
+  .nav-link {
+    flex: 1 1 45%;
+    display: flex;
+  }
+  .nav-link :deep(.metal-wrapper) {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>

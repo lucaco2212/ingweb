@@ -2,13 +2,74 @@
 
 **Estudiante:** Lucas Antonio Covarrubias Gamonal  
 **Asignatura:** Ingenieria Web  
-**Tecnologia:** Vue 3 (Composition API / script setup) + Vite + Vue Router  
+**Tecnologia:** Vue 3 (Composition API / script setup) + Vite + Vue Router 4  
 
 ---
 
-## Contexto del Proyecto
+## Descripcion General del Proyecto
 
-Transformacion y evolucion de la plataforma web hacia el portal corporativo y catalogo interactivo de **TecnoSoporte Nuble**, empresa dedicada a servicios de soporte tecnico, infraestructura de redes, desarrollo web y capacitacion tecnologica en la Region de Nuble.
+**TecnoSoporte Nuble** es una aplicacion web interactiva desarrollada como Single Page Application (SPA) para una empresa regional dedicada a la prestacion de servicios tecnologicos integrales (soporte tecnico computacional, infraestructura de redes, desarrollo de software web y capacitacion digital).
+
+El proyecto integra un catalogo dinamico de servicios con filtrado reactivo multidimensional, navegacion por rutas sin recarga, estado compartido desacoplado y un formulario de contacto y cotizacion con validacion estricta en tiempo real y confirmacion de recepcion.
+
+---
+
+## Instrucciones de Instalacion y Ejecucion
+
+### Requisitos Previos
+- Node.js (version 18 o superior recomendada)
+- Gestor de paquetes npm
+
+### Pasos para Ejecucion Local
+
+1. **Instalacion de dependencias:**
+   ```bash
+   npm install
+   ```
+
+2. **Iniciar servidor de desarrollo:**
+   ```bash
+   npm run dev
+   ```
+   La aplicacion estara disponible en el puerto local indicado por Vite (habitualmente `http://localhost:5173`).
+
+3. **Compilacion para produccion:**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## Estructura del Proyecto
+
+```text
+actividad semana 9/
+├── public/
+├── src/
+│   ├── assets/                 # Recursos graficos estaticos
+│   ├── components/             # Componentes modulares y reutilizables
+│   │   ├── DancingLetters.vue  # Cabecera interactiva con animacion tipografica
+│   │   ├── LiquidButton.vue    # Boton estilizado con variantes visuales
+│   │   └── ServicioCard.vue    # Tarjeta de presentacion individual de servicio
+│   ├── data/                   # Datos locales y catalogos
+│   │   └── servicios.js        # Coleccion estructurada de servicios tecnologicos
+│   ├── router/                 # Configuracion de rutas
+│   │   └── index.js            # Enrutador Vue Router (Inicio, Nosotros, Servicios, Contacto)
+│   ├── stores/                 # Estado reactivo global
+│   │   └── seleccion.js        # Estado compartido del servicio preseleccionado
+│   ├── views/                  # Vistas principales de la aplicacion (SPA)
+│   │   ├── InicioView.vue      # Pagina de inicio y propuesta de valor
+│   │   ├── NosotrosView.vue    # Informacion institucional, mision y vision
+│   │   ├── ServiciosView.vue   # Catalogo con buscador, filtros y seleccion
+│   │   └── ContactoView.vue    # Formulario de contacto con validaciones
+│   ├── App.vue                 # Componente raiz con layout, header taped y footer
+│   ├── main.js                 # Punto de entrada y montaje de Vue + Router
+│   └── style.css               # Sistema de variables y estilos globales
+├── CONTEXTO.md                 # Contexto de negocio y directrices tecnicas
+├── index.html                  # Plantilla base HTML5
+├── package.json                # Dependencias y scripts del proyecto
+└── README.md                   # Documentacion tecnica del desarrollo
+```
 
 ---
 
@@ -150,6 +211,34 @@ Cada campo en estado invalido recibe la clase CSS `.is-invalid` (resaltado con b
 
 ---
 
+## Parte 6 – Diseno y revision final
+
+En la etapa final se ejecuto una auditoria integral sobre todo el sitio web para consolidar la coherencia visual, optimizar la experiencia de usuario (UX/UI) y asegurar la adaptabilidad responsiva en diversos dispositivos.
+
+### 1. Unificacion de la Identidad Visual
+- **Paleta de Colores Corporativa:** Se estandarizaron los tokens de diseno en `src/style.css` basados en tonos azules (`#0284C7`), turquesas (`#06B6D4`), acentos teal (`#0D9488`), fondo claro slate (`#F8FAFC`) y tipografia de alto contraste (`#0F172A`).
+- **Tipografia Coherente:** Se aplico la combinacion tipografica de Google Fonts con *Outfit* para titulos y encabezados (`font-weight: 800`), y *Inter Tight* para cuerpos de texto, formularios y botones.
+- **Bordes, Sombras y Espaciados:** Se homogeneizaron los radios de borde (tarjetas principales con `border-radius: 24px`, elementos secundarios con `12px` - `20px`), sombras difusas suaves con tinte slate y transiciones fluidas en estados hover (`0.2s ease`).
+
+### 2. Adaptacion Responsiva Multiplataforma
+Se validaron e incorporaron reglas de medios (media queries) para garantizar la correcta visualizacion en:
+- **Dispositivos Moviles (~375px - 480px):** Las cintas decorativas vectoriales del header reducen su escala y reposicionamiento para evitar superposiciones; la barra de navegacion distribuye los enlaces de manera balanceada; la grilla de servicios pasa automaticamente a una unica columna vertical; y los campos del formulario se apilan fluidamente.
+- **Tablets (~768px):** Ajuste dinamico de grillas de 2 columnas para servicios y pilares institucionales.
+- **Escritorio (~1024px+):** Disposicion amplia de 3 columnas para servicios con maximo ancho centrado de 1080px.
+
+### 3. Pie de Pagina Corporativo (Footer)
+Se anadio un footer estructural en `App.vue` que presenta:
+- Identidad de marca de **TecnoSoporte Nuble**.
+- Datos de contacto y cobertura territorial (Chillan, Region de Nuble).
+- Horario de atencion y correo electronico corporativo.
+- Linea de derechos reservados formal.
+
+### 4. Revision de Calidad de Codigo y Rendimiento
+- Verificacion de eliminacion de archivos huerfanos, importaciones sin uso y ausencia de sentencias `console.log`.
+- Validacion estricta de compilacion de produccion con `npm run build`, alcanzando 0 errores y 0 advertencias.
+
+---
+
 ## Verificacion de Integridad
 - Compilacion de produccion validada exitosamente con `npm run build` (0 errores, 0 advertencias).
-- Flujo completo verificado: navegacion SPA, seleccion de servicio en catalogo, traspaso automatico al formulario de contacto, validacion de campos y confirmacion de envio.
+- Navegacion SPA fluida, reactividad completa, validaciones robustas y responsive design comprobados.

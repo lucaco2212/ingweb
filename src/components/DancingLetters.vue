@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   text: {
     type: String,
-    default: 'Recepción de Textos Escolares'
+    default: 'TecnoSoporte Ñuble'
   },
   fontSizeClass: {
     type: String,
@@ -31,8 +31,6 @@ const activeLetters = ref({})
 const words = computed(() => {
   return props.text.split(' ').map(word => word.split(''))
 })
-
-import { computed } from 'vue'
 
 function triggerAnimation(letterIndex) {
   // Activa la animación
