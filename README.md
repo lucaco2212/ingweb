@@ -49,6 +49,8 @@ El proyecto integra un catalogo dinamico de servicios con filtrado reactivo mult
 ```text
 actividad semana 9/
 ├── backend/                    # Servidor backend independiente (Actividad 9)
+│   ├── data/                   # Modulo de datos locales del backend
+│   │   └── servicios.js        # Coleccion de servicios en formato CommonJS
 │   ├── node_modules/           # Dependencias exclusivas del backend
 │   ├── package-lock.json       # Arbol de dependencias bloqueado del backend
 │   ├── package.json            # Manifiesto y scripts del backend (Express)
@@ -181,6 +183,36 @@ Se verifico la ejecucion del servidor mediante `npm start` y la recepcion correc
 
 ---
 
+### Parte 5 – Datos de servicios
+
+En esta etapa se creo el modulo de persistencia de datos local para el backend en `backend/data/servicios.js`, exportando la coleccion mediante el estandar **CommonJS** (`module.exports = servicios`):
+
+#### 1. Estructura de cada Servicio:
+Cada registro del arreglo contiene las siguientes 6 propiedades:
+- **`id` (Number):** Identificador unico secuencial.
+- **`nombre` (String):** Nombre formal del servicio tecnologico.
+- **`categoria` (String):** Categoria tematica de clasificacion.
+- **`descripcion` (String):** Detalle tecnico y alcance del servicio.
+- **`precio` (Number):** Valor referencial en moneda local (CLP).
+- **`disponible` (Boolean):** Flag de disponibilidad operativa (con el servicio de id 6 configurado en `false`).
+
+#### 2. Servicios Incorporados (Total: 8 servicios):
+1. **Mantenimiento Preventivo y Correctivo de Equipos** (*Soporte Tecnico*, $25.000, Disponible).
+2. **Instalacion y Configuracion de Redes y Wi-Fi** (*Redes e Infraestructura*, $65.000, Disponible).
+3. **Desarrollo de Sitios Web y Landing Pages** (*Desarrollo Web*, $180.000, Disponible).
+4. **Recuperacion de Datos y Respaldos en la Nube** (*Soporte Tecnico*, $45.000, Disponible).
+5. **Capacitacion en Alfabetizacion Digital y Ciberseguridad** (*Capacitacion y Ciberseguridad*, $35.000, Disponible).
+6. **Auditoria de Seguridad y Vulnerabilidades de Red** (*Redes e Infraestructura*, $95.000, No disponible).
+7. **Desarrollo de Aplicaciones Web y Paneles a Medida** (*Desarrollo Web*, $320.000, Disponible).
+8. **Implementacion de Servidores y Automatizacion Cloud** (*Automatizacion y Cloud*, $140.000, Disponible).
+
+#### 3. Adaptaciones Realizadas respecto al Ejemplo Generico:
+- Se extendio la coleccion a 8 servicios (superando el minimo de 6 exigido).
+- Se incorporaron categorias especializadas propias como **Capacitacion y Ciberseguridad** y **Automatizacion y Cloud**, ampliando la coherencia con el rubro tecnologico de TecnoSoporte Nuble definido en `CONTEXTO.md`.
+- El archivo se mantiene como modulo desacoplado, listo para ser consumido por las rutas de Express en la siguiente etapa.
+
+---
+
 ## Verificacion de Integridad
 - Frontend: Compilacion validada con `npm run build` (0 errores, 0 advertencias).
-- Backend: Servidor `backend/server.js` configurado y probado en `http://localhost:3000` con `npm start`.
+- Backend: Modulo `backend/data/servicios.js` probado con Node.js CommonJS (8 servicios cargados exitosamente).
