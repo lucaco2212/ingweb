@@ -331,9 +331,36 @@ Se realizaron pruebas de peticion HTTP para validar el comportamiento del filtro
 
 ---
 
+### Parte 9 – Middleware JSON
+
+En esta etapa se incorporo el middleware nativo `express.json()` en el punto de entrada de la aplicacion (`backend/server.js`), ubicado estrategicamente antes de la declaracion de las rutas:
+
+```javascript
+const app = express()
+const PORT = 3000
+
+// Middleware para parsear cuerpos de peticiones en formato JSON
+app.use(express.json())
+```
+
+#### Explicacion del Rol y Utilidad de `express.json()`:
+
+1. **Funcionamiento Tecnico:**  
+   `express.json()` es un middleware integrado en Express que intercepta todas las solicitudes HTTP entrantes cuyo encabezado sea `Content-Type: application/json`. Lee el flujo de datos crudos (*stream de bytes*) proveniente del cuerpo de la peticion (*request body*), parsea la cadena JSON y la convierte automaticamente en un objeto JavaScript accesible a traves de `req.body`.
+
+2. **Relevancia para Proximas Etapas (Metodos POST, PUT y PATCH):**  
+   Sin este middleware, al recibir solicitudes con metodos de escritura o actualizacion (como `POST /api/servicios` para crear un nuevo servicio o `PUT /api/servicios/:id` para modificar uno existente), el objeto `req.body` seria `undefined`, impidiendo al servidor extraer y validar los datos enviados por el cliente (nombre, categoria, descripcion, precio, disponibilidad). Con `express.json()` activo, el servidor queda plenamente facultado para procesar payloads JSON en operaciones de creacion y actualizacion de recursos.
+
+3. **Inocuidad sobre Peticiones Existentes:**  
+   Al tratarse de un middleware condicional que solo actua cuando existe un payload JSON en la solicitud, las rutas de lectura existentes (`GET /`, `GET /api/servicios`, `GET /api/servicios/:id`) continuan operando con total normalidad y sin degradacion de rendimiento.
+
+---
+
 ## Verificacion de Integridad
 - Frontend: Compilacion validada con `npm run build` (0 errores, 0 advertencias).
+- Backend: Middleware `express.json()` integrado e inicializado globalmente.
 - Backend: Endpoint `GET /api/servicios` verificado respondiendo con la coleccion completa o filtrada por `categoria` (query string).
 - Backend: Endpoint `GET /api/servicios/:id` verificado con busqueda exitosa (200 OK) y manejo de id inexistente (404 Not Found).
+
 
 

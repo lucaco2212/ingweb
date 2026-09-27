@@ -4,6 +4,9 @@ const servicios = require('./data/servicios')
 const app = express()
 const PORT = 3000
 
+// Middleware para parsear cuerpos de peticiones en formato JSON
+app.use(express.json())
+
 app.get('/', (req, res) => {
   res.send('Servidor de empresa funcionando correctamente')
 })
