@@ -36,6 +36,8 @@ El proyecto integra un catalogo dinamico de servicios con filtrado reactivo mult
    npm start
    ```
    El servidor backend estara disponible en `http://localhost:3000`.
+   - Endpoint de prueba: `http://localhost:3000/`
+   - Endpoint de API REST: `http://localhost:3000/api/servicios`
 
 3. **Compilacion para produccion del frontend:**
    ```bash
@@ -213,6 +215,49 @@ Cada registro del arreglo contiene las siguientes 6 propiedades:
 
 ---
 
+### Parte 6 – API de servicios
+
+En esta etapa se expuso el primer endpoint REST funcional de la aplicacion en `backend/server.js`, permitiendo a clientes externos consultar la totalidad del catalogo de servicios tecnologicos en formato estructurado JSON:
+
+```javascript
+const express = require('express')
+const servicios = require('./data/servicios')
+
+const app = express()
+const PORT = 3000
+
+app.get('/', (req, res) => {
+  res.send('Servidor de empresa funcionando correctamente')
+})
+
+app.get('/api/servicios', (req, res) => {
+  res.json(servicios)
+})
+
+app.listen(PORT, () => {
+  console.log(`Servidor ejecutandose en http://localhost:${PORT}`)
+})
+```
+
+#### Diferencia Tecnica entre `res.send()` y `res.json()`:
+
+1. **`res.send([body])`:**
+   - Es un metodo generico y polimorfico de Express para despachar respuestas HTTP.
+   - Puede recibir diversos tipos de datos, tales como cadenas de texto (`String`), objetos `Buffer`, objetos JavaScript o arreglos.
+   - Infiere automaticamente el encabezado HTTP `Content-Type` correspondiente segun el tipo de argumento proporcionado: asigna `text/html` o `text/plain` para cadenas de texto, y `application/octet-stream` para buffers.
+   - Si se le entrega un objeto o arreglo, internamente invoca de forma delegada a `res.json()`.
+
+2. **`res.json([body])`:**
+   - Es un metodo disenado de manera explicita y especializada para la construccion de APIs REST que transmiten datos en formato JSON.
+   - Establece de forma estricta y predeterminada la cabecera `Content-Type: application/json; charset=utf-8`.
+   - Serializa el argumento proporcionado mediante `JSON.stringify()`, asegurando una conversion precisa de estructuras complejas, valores nulos (`null`) o booleanos a una cadena JSON valida.
+   - Respeta las configuraciones globales del entorno de Express, tales como el formateo e indentacion de espacios para respuestas legibles (`app.set('json spaces', 2)`).
+
+#### Verificacion del Endpoint:
+Se comprobo el funcionamiento del servidor realizando peticiones HTTP a `http://localhost:3000/api/servicios`, validando la recepcion integra de los 8 objetos de servicio en formato JSON sin advertencias ni errores en consola.
+
+---
+
 ## Verificacion de Integridad
 - Frontend: Compilacion validada con `npm run build` (0 errores, 0 advertencias).
-- Backend: Modulo `backend/data/servicios.js` probado con Node.js CommonJS (8 servicios cargados exitosamente).
+- Backend: Endpoint `GET /api/servicios` verificado y respondiendo con 8 registros en formato JSON.
