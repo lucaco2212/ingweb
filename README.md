@@ -294,8 +294,46 @@ Se realizaron pruebas de consulta HTTP contra el servidor en ejecucion:
 
 ---
 
+### Parte 8 – Filtro por categoria
+
+En esta etapa se evoluciono el endpoint `GET /api/servicios` en `backend/server.js` para admitir filtrado dinamico mediante parametros de consulta en la URL (*query strings*), permitiendo filtrar por categoria de forma flexible e insensible a mayusculas/minusculas (*case-insensitive*):
+
+```javascript
+app.get('/api/servicios', (req, res) => {
+  const { categoria } = req.query
+
+  if (categoria) {
+    const filtrados = servicios.filter(
+      s => s.categoria.toLowerCase() === categoria.toLowerCase()
+    )
+    return res.json(filtrados)
+  }
+
+  res.json(servicios)
+})
+```
+
+#### Explicacion de Diferencias: `req.params` vs `req.query`:
+
+| Caracteristica | `req.params` (Parametros de Ruta) | `req.query` (Parametros de Consulta / Query Strings) |
+| :--- | :--- | :--- |
+| **Ubicacion en la URL** | Forma parte estructural de la ruta (`/api/servicios/:id`). | Se anade al final de la URL tras el signo de interrogacion (`/api/servicios?categoria=desarrollo`). |
+| **Definicion en el Servidor** | Requiere declaracion explicita en el patron de ruta de Express (`:nombre`). | No requiere declaracion en la firma de la ruta; Express parsea automaticamente todo par clave-valor tras `?`. |
+| **Obligatoriedad** | Obligatorio para coincidir con la ruta especifica. | Opcional; se utiliza comunmente para filtros, ordenamiento, busquedas y paginacion. |
+| **Proposito REST** | Identificar un recurso unico y especifico en la jerarquia. | Modificar, filtrar o paginar la representacion de una coleccion de recursos. |
+
+#### Verificacion de Endpoints con Query Parameters:
+Se realizaron pruebas de peticion HTTP para validar el comportamiento del filtro:
+- **`GET /api/servicios`:** Retorna la coleccion completa (8 servicios).
+- **`GET /api/servicios?categoria=desarrollo%20web`:** Retorna 2 servicios pertenecientes a *Desarrollo Web*.
+- **`GET /api/servicios?categoria=SOPORTE%20TÉCNICO`:** Retorna 2 servicios pertenecientes a *Soporte Tecnico* gracias a la comparacion `.toLowerCase()`.
+- **`GET /api/servicios?categoria=categoria_inexistente`:** Retorna un arreglo vacio `[]` con codigo `200 OK`, sin provocar errores ni caidas del servidor.
+
+---
+
 ## Verificacion de Integridad
 - Frontend: Compilacion validada con `npm run build` (0 errores, 0 advertencias).
-- Backend: Endpoint `GET /api/servicios` verificado y respondiendo con 8 registros en formato JSON.
+- Backend: Endpoint `GET /api/servicios` verificado respondiendo con la coleccion completa o filtrada por `categoria` (query string).
 - Backend: Endpoint `GET /api/servicios/:id` verificado con busqueda exitosa (200 OK) y manejo de id inexistente (404 Not Found).
+
 

@@ -9,6 +9,15 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/servicios', (req, res) => {
+  const { categoria } = req.query
+
+  if (categoria) {
+    const filtrados = servicios.filter(
+      s => s.categoria.toLowerCase() === categoria.toLowerCase()
+    )
+    return res.json(filtrados)
+  }
+
   res.json(servicios)
 })
 
